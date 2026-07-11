@@ -5,3 +5,9 @@ data/features/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+*.npy
+*.zip
+# exceptions — commit these despite rules above
+!models/best_model.pt
+!models/test_results.json
+!results/
