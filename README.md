@@ -17,6 +17,15 @@ Grad-CAM explainability, trained on two public datasets.
 | Cross-dataset AUC gap (PhysioNet vs CirCor) | 0.0065 |
 | Min. usable SNR (AUC ≥ 0.85) | 15 dB |
 
+## Results Preview
+
+![Grad-CAM Explainability — Abnormal PCG](results/gradcam_abnormal.png)
+
+*Grad-CAM overlay showing model attention on an abnormal PCG recording. 
+Red/yellow regions indicate diagnostically significant time-frequency areas.*
+
+![Learning Curves](results/learning_curves.png)
+
 ## Datasets
 
 - [PhysioNet/CinC Challenge 2016](https://physionet.org/content/challenge-2016/1.0.0/)
