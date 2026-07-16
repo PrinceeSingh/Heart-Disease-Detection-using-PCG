@@ -12,7 +12,7 @@ Provides:
 import numpy as np
 import torch
 from typing import Union, Tuple
-from model import PCGClassifier
+from .model import PCGClassifier
 
 
 class PCGPredictor:

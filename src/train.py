@@ -19,8 +19,8 @@ from torch.utils.data import DataLoader
 from sklearn.metrics import roc_auc_score, f1_score
 from typing import Dict, Tuple
 
-from model import PCGClassifier
-from dataset import PCGDataset
+from .model import PCGClassifier
+from .dataset import PCGDataset
 
 
 def train_epoch(
@@ -155,7 +155,7 @@ def train(
     device = torch.device(device)
     os.makedirs(output_dir, exist_ok=True)
     
-    # ─── Prepare datasets ─────────────────────────────────────────────
+    # ─── Prepare datasets ────────────────────────────────────────────────────────
     train_ds = PCGDataset(logmel[train_idx], labels[train_idx], augment=True)
     val_ds = PCGDataset(logmel[val_idx], labels[val_idx], augment=False)
     test_ds = PCGDataset(logmel[test_idx], labels[test_idx], augment=False)
@@ -173,16 +173,16 @@ def train(
         num_workers=2, pin_memory=True
     )
     
-    # ─── Initialize model ────────────────────────────────────────────
+    # ─── Initialize model ───────────────────────────────────────────────────────
     model = PCGClassifier(n_mels=64, n_frames=251, dropout=0.4).to(device)
     
-    # ─── Class-weighted loss (handle imbalance) ──────────────────────
+    # ─── Class-weighted loss (handle imbalance) ─────────────────────────────────
     n_neg = (labels[train_idx] == 0).sum()
     n_pos = (labels[train_idx] == 1).sum()
     pos_weight = torch.tensor([n_neg / n_pos], dtype=torch.float32).to(device)
     criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
     
-    # ─── Optimizer + Scheduler ───────────────────────────────────────
+    # ─── Optimizer + Scheduler ──────────────────────────────────────────────────
     optimizer = torch.optim.Adam(
         model.parameters(),
         lr=learning_rate,
@@ -196,7 +196,7 @@ def train(
         verbose=False
     )
     
-    # ─── Training loop ───────────────────────────────────────────────
+    # ─── Training loop ──────────────────────────────────────────────────────────
     history = {
         'train_loss': [],
         'val_loss': [],
@@ -253,7 +253,7 @@ def train(
     print("="*80)
     print(f"Best validation AUC: {best_val_auc:.4f} (epoch {best_epoch})\n")
     
-    # ─── Evaluate on test set ────────────────────────────────────────
+    # ─── Evaluate on test set ───────────────────────────────────────────────────
     model.load_state_dict(torch.load(best_model_path, map_location=device))
     model.eval()
     

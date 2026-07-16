@@ -28,7 +28,7 @@ class PCGClassifier(nn.Module):
     def __init__(self, n_mels: int = 64, n_frames: int = 251, dropout: float = 0.4):
         super().__init__()
         
-        # ─── CNN Encoder (3 blocks) ───────────────────────────────────
+        # ─── CNN Encoder (3 blocks) ──────────────────────────────────────────────
         # Block 1: 1→32 channels, MaxPool(2,2)
         # Block 2: 32→64 channels, MaxPool(2,2)
         # Block 3: 64→128 channels, MaxPool(16,1) - collapses freq axis
@@ -55,7 +55,7 @@ class PCGClassifier(nn.Module):
             nn.MaxPool2d((16, 1)),   # → (B, 128, 1, 62)
         )
         
-        # ─── Bidirectional LSTM (2 layers) ────────────────────────────
+        # ─── Bidirectional LSTM (2 layers) ──────────────────────────────────────
         # Input:  (B, 62, 128)  — 62 time steps, 128-dim features
         # Output: (B, 62, 128)  — bidirectional: 64×2=128
         self.lstm = nn.LSTM(
@@ -67,12 +67,12 @@ class PCGClassifier(nn.Module):
             dropout=dropout
         )
         
-        # ─── Self-Attention Pooling ──────────────────────────────────
+        # ─── Self-Attention Pooling ──────────────────────────────────────────────
         # Computes scalar attention weight for each time step
         # Then performs weighted sum: (B, 62, 128) → (B, 128)
         self.attention = nn.Linear(128, 1)
         
-        # ─── Classification Head ──────────────────────────────────────
+        # ─── Classification Head ─────────────────────────────────────────────────
         # 128 → 64 → 1 (logit, not sigmoid)
         # BCEWithLogitsLoss applies sigmoid internally for stability
         self.classifier = nn.Sequential(
