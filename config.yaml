@@ -1,0 +1,37 @@
+# PCG Heart Disease Detection - Training Configuration
+
+# Model Architecture
+model:
+  n_mels: 64
+  n_frames: 251
+  dropout: 0.4
+
+# Training
+training:
+  epochs: 40
+  batch_size: 64
+  learning_rate: 1e-3
+  weight_decay: 1e-4
+  early_stop_patience: 10
+  gradient_clip: 1.0
+
+# Data
+data:
+  train_ratio: 0.6
+  val_ratio: 0.15
+  test_ratio: 0.25
+  
+# SpecAugment
+augmentation:
+  enabled: true
+  max_freq_mask: 8   # mel bands
+  max_time_mask: 30  # frames
+
+# Device
+device: cuda  # or 'cpu'
+
+# Paths
+paths:
+  models: ./models
+  logs: ./logs
+  data: ./data
