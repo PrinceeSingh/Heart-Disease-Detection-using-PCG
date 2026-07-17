@@ -6,9 +6,10 @@ A low-cost, real-time cardiac screening system that detects heart disease from p
 
 | Metric | Value |
 |--------|-------|
-| Test AUC | **0.9567** |
-| Sensitivity (at optimal threshold) | **91%** |
-| Specificity | **88%** |
+| Test AUC | **0.9584** |
+| Sensitivity (at optimal threshold) | **83%** |
+| Specificity | **93%** |
+| Optimal threshold | **0.532**
 | Cross-dataset AUC gap (PhysioNet vs CirCor) | 0.0065 |
 | Min. usable SNR (AUC ≥ 0.85) | 15 dB |
 
