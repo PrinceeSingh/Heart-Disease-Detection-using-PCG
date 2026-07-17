@@ -11,4 +11,4 @@ __pycache__/
 !models/best_model.pt
 !models/test_results.json
 !results/
-vscode/
+.vscode/
