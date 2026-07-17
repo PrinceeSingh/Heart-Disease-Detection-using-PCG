@@ -10,6 +10,7 @@ Features:
 - Model checkpointing (best AUC only)
 """
 
+import inspect
 import os
 import json
 import numpy as np
@@ -118,6 +119,19 @@ def validate_epoch(
     return avg_loss, auc, f1
 
 
+def build_scheduler(optimizer: torch.optim.Optimizer):
+    """Create a ReduceLROnPlateau scheduler compatible with the installed torch version."""
+    kwargs = {
+        'mode': 'max',
+        'factor': 0.5,
+        'patience': 4,
+    }
+    if 'verbose' in inspect.signature(torch.optim.lr_scheduler.ReduceLROnPlateau).parameters:
+        kwargs['verbose'] = False
+
+    return torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, **kwargs)
+
+
 def train(
     logmel: np.ndarray,
     labels: np.ndarray,
@@ -160,17 +174,20 @@ def train(
     val_ds = PCGDataset(logmel[val_idx], labels[val_idx], augment=False)
     test_ds = PCGDataset(logmel[test_idx], labels[test_idx], augment=False)
     
+    use_pin_memory = device.type == 'cuda'
+    num_workers = 0 if device.type == 'cpu' else 2
+
     train_loader = DataLoader(
         train_ds, batch_size=batch_size, shuffle=True,
-        num_workers=2, pin_memory=True
+        num_workers=num_workers, pin_memory=use_pin_memory
     )
     val_loader = DataLoader(
         val_ds, batch_size=batch_size, shuffle=False,
-        num_workers=2, pin_memory=True
+        num_workers=num_workers, pin_memory=use_pin_memory
     )
     test_loader = DataLoader(
         test_ds, batch_size=batch_size, shuffle=False,
-        num_workers=2, pin_memory=True
+        num_workers=num_workers, pin_memory=use_pin_memory
     )
     
     # ─── Initialize model ───────────────────────────────────────────────────────
@@ -188,13 +205,7 @@ def train(
         lr=learning_rate,
         weight_decay=weight_decay
     )
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer,
-        mode='max',
-        factor=0.5,
-        patience=4,
-        verbose=False
-    )
+    scheduler = build_scheduler(optimizer)
     
     # ─── Training loop ──────────────────────────────────────────────────────────
     history = {
