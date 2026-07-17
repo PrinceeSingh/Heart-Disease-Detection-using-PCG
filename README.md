@@ -13,8 +13,6 @@ A low-cost, real-time cardiac screening system that detects heart disease from p
 | Cross-dataset AUC gap (PhysioNet vs CirCor) | 0.0065 |
 | Min. usable SNR (AUC ≥ 0.85) | 15 dB |
 
-> **Note:** verify these against your latest `results.json` before publishing — earlier internal runs reported different sensitivity/specificity at a different decision threshold.
-
 ## Results Preview
 
 ![Grad-CAM Explainability — Abnormal PCG](results/gradcam_abnormal.png)
